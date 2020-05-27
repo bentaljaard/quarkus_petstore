@@ -1,0 +1,374 @@
+openapi: 3.0.0
+info:
+  version: 0.0.4
+  title: Pay per day
+  contact:
+    email: ice@vodafoneziggo.com
+  description: >-
+    This capability is about implementing PPD (dagpassen) support in the My
+    Portal for customers on Next (EOS) and Selene TV propositions
+servers:
+  - url: 'https://sgwap-ltv42.office.intern:8443/v1/Tibco/payperday/v1'
+  - url: 'https://nl0589yr.dc-ratingen.de:8443/v1/Tibco/payperday/v1'
+  - url: 'https://sgwaplb-aa30-bss.office.intern:8443/v1/Tibco/payperday/v1'
+  - url: 'https://vip-layeracc701.dc-ratingen.de:8443/v1/Tibco/payperday/v1'
+  - url: 'https://sgwaplb-ap40-bss.office.intern:8443/v1/Tibco/payperday/v1'
+  - url: 'https://vip-layerprd701.dc-ratingen.de:8443/v1/Tibco/payperday/v1'
+paths:
+  /orders:
+    post:
+      tags:
+        - Orders
+      summary: Create order
+      description: Create Pay per day order
+      parameters:
+        - name: x-correlation-id
+          description: >-
+            Correlation identifier to keep track of workflow (UUID format
+            preferred)
+          required: true
+          in: header
+          schema:
+            $ref: '#/components/headers/x-correlation-id'
+        - name: x-authenticateduser
+          description: >-
+            Authenticated user. Do not put any value here - It will be
+            automatically populated by Layer
+          in: header
+          schema:
+            $ref: '#/components/headers/x-authenticateduser'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create-payperday-order-request-v1'
+      security:
+        - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create-payperday-order-response-v1'
+          headers:
+            x-correlation-id:
+              $ref: '#/components/headers/x-correlation-id'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response-400'
+          headers:
+            x-correlation-id:
+              $ref: '#/components/headers/x-correlation-id'
+        '401':
+          description: Unauthorized
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+    delete:
+      tags:
+        - Orders
+      summary: Delete order.
+      description: >-
+        Service used to delete specific order. Valid combination of customerId
+        and orderId should be provided
+      parameters:
+        - name: x-correlation-id
+          description: >-
+            Correlation identifier to keep track of workflow (UUID format
+            preferred)
+          required: true
+          in: header
+          schema:
+            $ref: '#/components/headers/x-correlation-id'
+        - name: x-authenticateduser
+          description: >-
+            Authenticated user. Do not put any value here - It will be
+            automatically populated by Layer
+          in: header
+          schema:
+            type: string
+          example: salesChannel
+        - name: orderId
+          required: true
+          description: Identifier of the order we want to delete.
+          in: query
+          schema:
+            type: string
+          example: 958117
+        - name: customerId
+          required: true
+          description: Customer identifier
+          in: query
+          schema:
+            type: string
+            example: '9303636'
+      security:
+        - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          headers:
+            x-correlation-id:
+              $ref: '#/components/headers/x-correlation-id'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/response-400'
+          headers:
+            x-correlation-id:
+              $ref: '#/components/headers/x-correlation-id'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+    get:
+      tags:
+        - Orders
+      summary: Get orders
+      description: Gets a collection of all the orders for a specified customer.
+      parameters:
+        - name: x-correlation-id
+          description: >-
+            Correlation identifier to keep track of workflow (UUID format
+            preferred)
+          required: true
+          in: header
+          schema:
+            $ref: '#/components/headers/x-correlation-id'
+        - name: x-authenticateduser
+          description: >-
+            Authenticated user. Do not put any value here - It will be
+            automatically populated by Layer
+          in: header
+          schema:
+            type: string
+          example: salesChannel
+        - name: customerId
+          required: true
+          description: Customer identifier
+          in: query
+          schema:
+            type: string
+          example: '9303636'
+      security:
+        - basic_auth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/get-ppd-orders-response-v1'
+          headers:
+            x-correlation-id:
+              $ref: '#/components/headers/x-correlation-id'
+        '400':
+          description: Bad request.
+          headers:
+            x-correlation-id:
+              $ref: '#/components/headers/x-correlation-id'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Object not found
+        '429':
+          description: Too Many Requests
+        '500':
+          description: Internal Server Error
+components:
+  schemas:
+    create-payperday-order-request-v1:
+      type: object
+      required:
+        - customerId
+        - eventId
+        - accessServiceId
+        - serviceGroupId
+        - equipmentId
+        - dtvServiceId
+        - equipment
+      properties:
+        customerId:
+          description: Customer identifier
+          type: string
+          example: 15467712
+        serviceGroupId:
+          description: Service group identifier in Sigma
+          type: string
+          example: '100027281'
+        accessServiceId:
+          description: Service access identifier defined in Sigma
+          type: string
+          example: 100027281_ACCESS
+        dtvServiceId:
+          description: DTV service identifier defined in Sigma
+          type: string
+          example: 100027281_DTV
+        equipmentServiceId:
+          description: 'Equipment service identifier  '
+          type: string
+          example: 100027281_EQUIPMENT
+        equipment:
+          type: array
+          items:
+            $ref: '#/components/schemas/ppd-equipment-type-v1'
+          example:
+            - equipmentId: 5135
+              smartcardSerialNumber: 24708872
+              technologyType: OBO
+            - equipmentId: 5136
+              smartcardSerialNumber: 34708874
+              technologyType: IRDETO
+        eventId:
+          description: Event identifier to be activated
+          type: string
+          example: '17251'
+    create-payperday-order-response-v1:
+      type: object
+      properties:
+        orderId:
+          description: Id of the order
+          type: string
+          example: 12431af7092
+    get-ppd-orders-response-v1:
+      type: object
+      properties:
+        orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/ppd-order-object-type-v1'
+    ppd-equipment-type-v1:
+      type: object
+      description: Object equipment
+      properties:
+        equipmentId:
+          description: list of equipment is E.g. MEDIABOX_XL identifier
+          type: string
+          example: 5135
+        smartcardSerialNumber:
+          description: Smart card serial number
+          type: string
+          example: '24708872'
+        technologyType:
+          description: Technology type. Irdeto or OBO (OBO means EOS or SELENE)
+          type: string
+          example: IRDETO
+          enum:
+            - IRDETO
+            - OBO
+    ppd-order-object-type-v1:
+      type: object
+      required:
+        - orderId
+        - customerId
+        - status
+      properties:
+        orderId:
+          description: order identifier
+          type: string
+          example: '958223'
+        technologyType:
+          description: OBO or IRDETO
+          type: string
+          example: '958223'
+        createdDateTime:
+          description: Order creation date time
+          type: string
+          example: '2020-01-18T18:40:02+01:00'
+        status:
+          description: Order status
+          type: string
+          enum:
+            - NEW
+            - ACCEPTED
+            - REJECTED
+            - PENDING_DUE_DATE
+            - CANCEL_ORDER
+            - CANCELLED
+            - PROVISIONING
+            - FAILED
+            - PROVISIONED
+            - BILLING_SELECTION
+            - TDR_CREATED
+            - DEPROVISIONING
+            - FAILED_DEPROV
+            - FINALIZED
+          example: PROVISIONED
+        statusDateTime:
+          description: date time when order status was updated
+          type: string
+          example: '2020-01-18T18:40:02+01:00'
+        customerId:
+          description: Customoer identifier
+          type: string
+          example: '14227639'
+        event:
+          $ref: '#/components/schemas/ppd-event-object-type-v1'
+    ppd-event-object-type-v1:
+      type: object
+      required:
+        - eventId
+        - channel
+      properties:
+        eventId:
+          description: Event identifier
+          type: string
+          example: '17092'
+        channel:
+          description: TV channel
+          type: string
+          example: FOX_Sports_1_Eredivisie
+        programStart:
+          description: Start datet time
+          type: string
+          example: '2019-11-01T08:00:00+01:00'
+        programEnd:
+          description: End date time
+          type: string
+          example: '2019-11-02T07:59:00+01:00'
+        price:
+          description: Event price
+          type: string
+          example: '7.95'
+    response-400:
+      type: object
+      required:
+        - reason
+      properties:
+        reason:
+          description: >-
+            Response message describing the status code. Will be returend in
+            case of error
+          type: string
+          example: Bad request.
+  headers:
+    x-correlation-id:
+      description: >-
+        Correlation identifier to keep track of workflow (UUID format preferred)
+        The same va be returned in response.
+      schema:
+        type: string
+        format: uuid
+      example: 417acb62-232f-4352-a41d-6c74f386c800
+    x-authenticateduser:
+      description: >-
+        Authenticated user. Do not put any value here - It will be automatically
+        populated by Layer
+      schema:
+        type: string
+      example: portal
+  securitySchemes:
+    basic_auth:
+      type: http
+      scheme: basic

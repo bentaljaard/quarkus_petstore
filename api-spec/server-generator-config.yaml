@@ -1,0 +1,11 @@
+---
+modelPackage: com.bentaljaard.demo.petstore.models
+apiPackage: com.bentaljaard.demo.petstore.api
+invokerPackage: com.bentaljaard.demo.petstore
+groupId: com.bentaljaard.demo
+artifactId: petstore
+dateLibrary: java8
+booleanGetterPrefix: is
+artifactVersion: 1.0.0
+hideGenerationTimestamp: true
+
