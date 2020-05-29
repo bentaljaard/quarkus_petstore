@@ -4,10 +4,7 @@ import java.util.Objects;
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.*;
-import io.swagger.annotations.*;
 
 
 public class Pet   {
@@ -19,7 +16,6 @@ public class Pet   {
   /**
    **/
   
-  @ApiModelProperty(required = true, value = "")
   @JsonProperty("id")
   @NotNull
   public Long getId() {
@@ -32,7 +28,6 @@ public class Pet   {
   /**
    **/
   
-  @ApiModelProperty(required = true, value = "")
   @JsonProperty("name")
   @NotNull
   public String getName() {
@@ -45,7 +40,6 @@ public class Pet   {
   /**
    **/
   
-  @ApiModelProperty(value = "")
   @JsonProperty("tag")
   public String getTag() {
     return tag;

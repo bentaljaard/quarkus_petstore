@@ -4,10 +4,7 @@ import java.util.Objects;
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.*;
-import io.swagger.annotations.*;
 
 
 public class Error   {
@@ -18,7 +15,6 @@ public class Error   {
   /**
    **/
   
-  @ApiModelProperty(required = true, value = "")
   @JsonProperty("code")
   @NotNull
   public Integer getCode() {
@@ -31,7 +27,6 @@ public class Error   {
   /**
    **/
   
-  @ApiModelProperty(required = true, value = "")
   @JsonProperty("message")
   @NotNull
   public String getMessage() {

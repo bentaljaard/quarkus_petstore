@@ -31,4 +31,3 @@ http://localhost:8080/swagger-ui/
 
 Read more in the [Quarkus OpenAPI guide](https://quarkus.io/guides/openapi-swaggerui-guide).
 
-# quarkus_petstore
